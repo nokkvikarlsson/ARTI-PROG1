@@ -10,13 +10,9 @@ import java.util.Collection;
 	execute(MOVE)
 */
 
-public class State
+public class Node
 {
-    public int Posx;
-    public int Posy;
-    public boolean On;
-    public int Orientation; //1 = NORTH, 2 = EAST, 3 = SOUTH, 4 = WEST
-    public int DirtsCleaned;
+    public State state; 
     //available moves()
     //public void execute(MOVE)
 }
