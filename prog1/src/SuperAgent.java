@@ -3,7 +3,7 @@ import java.util.Random;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class RandomAgent implements Agent
+public class SuperAgent implements Agent
 {
 	private Random random = new Random();
 
