@@ -22,17 +22,44 @@ public class SuperAgent implements Agent
 			Moving north increases the y coordinate and moving east increases the x coordinate of the robots position.
 			The robot is turned off initially, so don't forget to turn it on.
 		*/
-		Pattern perceptNamePattern = Pattern.compile("\\(\\s*([^\\s]+).*");
+		Pattern perceptNamePattern = Pattern.compile("\\(\\s*([^\\s]+)\\s*(\\w+).*");
 		for (String percept:percepts) {
 			Matcher perceptNameMatcher = perceptNamePattern.matcher(percept);
 			if (perceptNameMatcher.matches()) {
-				String perceptName = perceptNameMatcher.group(1);
+                String perceptName = perceptNameMatcher.group(1);
+                //Prints out the home cell of the robot.
 				if (perceptName.equals("HOME")) {
 					Matcher m = Pattern.compile("\\(\\s*HOME\\s+([0-9]+)\\s+([0-9]+)\\s*\\)").matcher(percept);
 					if (m.matches()) {
-						System.out.println("robot is at " + m.group(1) + "," + m.group(2));
-					}
-				} else {
+						System.out.println("Robot is at " + m.group(1) + "," + m.group(2));
+                    }
+                //Detects and prints the orientation of the robot.
+                } else if (perceptName.equals("ORIENTATION")) {
+                    //This regex can probably be shortened
+                    Matcher m = Pattern.compile("\\(\\s*ORIENTATION\\s+(NORTH+)*\\)|\\(\\s*ORIENTATION\\s+(SOUTH+)*\\)|\\(\\s*ORIENTATION\\s+(WEST+)*\\)|\\(\\s*ORIENTATION\\s+(EAST+)\\s*\\)").matcher(percept);
+					if (m.matches()) {
+						System.out.println("Robot faces " + m.group(1));
+                    }
+                //Prints all obstacles in the environment
+                } else if (perceptNameMatcher.group(2).equals("OBSTACLE")) {
+                    Matcher m = Pattern.compile("\\(\\s*AT\\s*OBSTACLE\\s+([0-9]+)\\s+([0-9]+)\\s*\\)").matcher(percept);
+					if (m.matches()) {
+						System.out.println("OBSTACLE detected at " + m.group(1) + "," + m.group(2));
+                    }
+                //Prints all cells which contain DIRT in the environment
+                } else if (perceptNameMatcher.group(2).equals("DIRT")) {
+                    Matcher m = Pattern.compile("\\(\\s*AT\\s*DIRT\\s+([0-9]+)\\s+([0-9]+)\\s*\\)").matcher(percept);
+					if (m.matches()) {
+						System.out.println("DIRT detected at " + m.group(1) + "," + m.group(2));
+                    }
+                //Prints the size of the environment
+                } else if (perceptName.equals("SIZE")) {
+                    Matcher m = Pattern.compile("\\(\\s*SIZE\\s+([0-9]+)\\s+([0-9]+)\\s*\\)").matcher(percept);
+					if (m.matches()) {
+						System.out.println("Size of the environment is " + m.group(1) + " by " + m.group(2));
+                    }
+                }
+                 else {
 					System.out.println("other percept:" + percept);
 				}
 			} else {
