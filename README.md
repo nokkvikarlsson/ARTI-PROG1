@@ -1,1 +1,0 @@
-# ARTI-PROG1
