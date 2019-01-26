@@ -8,7 +8,6 @@ public class Main {
 	 */
 	public static void main(String[] args){
 		try{
-			// TODO: put in your agent here
 			Agent agent = new SuperAgent();
 
 			int port=4001;
