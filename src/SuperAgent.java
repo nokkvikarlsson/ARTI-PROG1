@@ -12,7 +12,7 @@ public class SuperAgent implements Agent
 	public Coordinates startingPosition;
 	public ArrayList<Coordinates> dirts;
 	public ArrayList<Coordinates> obstacles;
-	public String orientation;
+	public int orientation;
 
 	public SuperAgent() {
 		roomLength = 0;
@@ -23,7 +23,7 @@ public class SuperAgent implements Agent
 		dirts = new ArrayList<Coordinates>();
 		obstacles = new ArrayList<Coordinates>();
 
-		String orientation = null;
+		int orientation = 0; //0 = NORTH, 1 = EAST, 2 = SOUTH, 3 = WEST
 	}
 
 	public class Coordinates {
@@ -70,8 +70,16 @@ public class SuperAgent implements Agent
 					if (m.matches()) {
 						System.out.println("Robot faces " + m.group(1));
 						//Set orientation variable
-						orientation = m.group(1);
-                    }
+						if(m.group(1).compareTo("NORTH")){
+							orientation = 0;
+						} else if(m.group(1).compareTo("EAST")){
+							orientation = 1;
+						} else if(m.group(1).compareTo("SOUTH")){
+							orientation = 2;
+						} else {
+							orientation = 3;
+						}
+					}
                 //Prints all obstacles in the environment
                 } else if (perceptNameMatcher.group(2).equals("OBSTACLE")) {
                     Matcher m = Pattern.compile("\\(\\s*AT\\s*OBSTACLE\\s+([0-9]+)\\s+([0-9]+)\\s*\\)").matcher(percept);

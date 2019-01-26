@@ -6,13 +6,12 @@ import java.util.Collection;
 	On
 	Orientation
 	DirtsCleaned
-	availableMoves() //if on dirt, only move avaible is suck (saves memory by reducing         possible branches)
+	availableMoves() //if on dirt, only move avaible is suck (saves memory by reducing possible branches)
 	execute(MOVE)
 */
 
 public class Node
 {
-    public State state; 
-    //available moves()
-    //public void execute(MOVE)
+	public State state;
+	//next nodes
 }

@@ -15,7 +15,7 @@ public class State
     public int Posx;
     public int Posy;
     public boolean On;
-    public int Orientation; //1 = NORTH, 2 = EAST, 3 = SOUTH, 4 = WEST
+    public int Orientation; //0 = NORTH, 1 = EAST, 2 = SOUTH, 3 = WEST
     public int DirtsCleaned;
     //available moves()
     //public void execute(MOVE)
