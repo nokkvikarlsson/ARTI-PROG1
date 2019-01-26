@@ -12,11 +12,11 @@ import java.util.Collection;
 
 public class State
 {
-    public int Posx;
-    public int Posy;
-    public boolean On;
-    public int Orientation; //0 = NORTH, 1 = EAST, 2 = SOUTH, 3 = WEST
-    public int DirtsCleaned;
+    public int posX;
+    public int posY;
+    public boolean on;
+    public int orientation; //0 = NORTH, 1 = EAST, 2 = SOUTH, 3 = WEST
+    public int dirtsLeft;
     //available moves()
     //public void execute(MOVE)
 }
