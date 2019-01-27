@@ -1,21 +1,23 @@
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Hashtable;
 import java.util.Stack;
-
-import javax.swing.text.html.HTMLDocument.HTMLReader.PreAction;
-
 import java.util.LinkedList;
+import java.util.Map;
 
 public class DFS{
     public Stack<State> frontier;
     public State initialState;
     public SuperAgent sa;
-    public ArrayList<State> previouslyVisited;
+    public Stack<State> previouslyVisited;
+    public Map<State, State> parent;
 
     public DFS(State _initialState, SuperAgent _sa){
         frontier = new Stack<State>();
         initialState = new State(_initialState);
         sa = _sa;
-        previouslyVisited = new ArrayList<State>();
+        previouslyVisited = new Stack<State>();
+        parent = new HashMap<State, State>();
     }
 
     //returns true if path found. false if no answer
@@ -69,14 +71,21 @@ public class DFS{
                     successorState.moveHistory.add("GO");
                 }
                 boolean duplicate = false;
-                for(State s: previouslyVisited){
-                    if(successorState.equals(s)){
-                        duplicate = true;
+                if(!successor.equals("SUCK") || !successorState.previousMove.equals("SUCK")){
+                    for(State s: previouslyVisited){
+                        if(successorState.equals(s)){
+                            duplicate = true;
+                        }
                     }
                 }
                 if(!duplicate){
                     if(goalTest(successorState)){return successorState;}
-                    else{frontier.add(successorState);}
+                    else{frontier.add(successorState); parent.put(successorState, previouslyVisited.peek());}
+                }
+                else{
+                    while(parent.get(frontier.peek()) != previouslyVisited.peek()){
+                        previouslyVisited.pop();
+                    }
                 }
             }
         }
