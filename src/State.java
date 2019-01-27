@@ -9,6 +9,7 @@ public class State
     public ArrayList<Coordinates> dirtsLeft;
     public String previousMove;
     public boolean turnAround;
+    //public Stack<String> moveHistory;
 
     public State(){
         pos = new Coordinates();
@@ -17,6 +18,7 @@ public class State
         dirtsLeft = new ArrayList<Coordinates>();
         previousMove = null;
         turnAround = false;
+        //moveHistory = new Linke
     }
 
     public State(State copy){
@@ -108,10 +110,10 @@ public class State
         if(goObstacle){
             moves.remove("GO");
         }
-        if(leftObstacle || (previousMove.compareTo("TURN_RIGHT") == 0)){
+        if(leftObstacle || (previousMove.compareTo("TURN_RIGHT") == 0) || (previousMove.compareTo("TURN_LEFT") == 0)){
             moves.remove("TURN_LEFT");
         }
-        if(rightObstacle || (previousMove.compareTo("TURN_LEFT") == 0)){
+        if(rightObstacle || (previousMove.compareTo("TURN_LEFT") == 0) || (previousMove.compareTo("TURN_RIGHT") == 0)){
             moves.remove("TURN_RIGHT");
         }
         return moves;

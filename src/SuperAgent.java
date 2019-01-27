@@ -142,14 +142,12 @@ public class SuperAgent implements Agent
     }
 
     public String nextAction(Collection<String> percepts) {
-		/*String move = moves.pop();
-		return move;*/
 		System.out.print("perceiving:");
 		for(String percept:percepts) {
 			System.out.print("'" + percept + "', ");
 		}
 		System.out.println("");
 		String[] actions = { "TURN_ON", "TURN_OFF", "TURN_RIGHT", "TURN_LEFT", "GO", "SUCK" };
-		return actions[random.nextInt(actions.length)];
+		return actions[random.nextInt(actions.length)];	
 	}
 }
