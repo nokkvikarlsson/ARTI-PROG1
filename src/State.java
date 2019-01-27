@@ -6,7 +6,7 @@ public class State
     public Coordinates pos;
     public boolean on;
     public int orientation; //0 = NORTH, 1 = EAST, 2 = SOUTH, 3 = WEST
-    public int dirtsLeft;
+    public ArrayList<Coordinates> dirtsLeft;
     public String previousMove;
     public boolean turnAround;
 
@@ -14,7 +14,7 @@ public class State
         pos = new Coordinates();
         on = false;
         orientation = 0;
-        dirtsLeft = 0;
+        dirtsLeft = new ArrayList<Coordinates>();
         previousMove = null;
         turnAround = false;
     }
@@ -23,10 +23,25 @@ public class State
         this.pos = new Coordinates(copy.pos.x, copy.pos.y);
         this.on = copy.on;
         this.orientation = copy.orientation;
-        this.dirtsLeft = copy.dirtsLeft;
+        this.dirtsLeft = new ArrayList<Coordinates>();
+        for(Coordinates dirt: copy.dirtsLeft){
+            this.dirtsLeft.add(new Coordinates(dirt.x, dirt.y));
+        }
         if(copy.previousMove != null){this.previousMove = new String(copy.previousMove);}
         else{this.previousMove = null;}
         this.turnAround = copy.turnAround;
+    }
+
+    public boolean equals(State that){
+        if(this.pos.equals(that.pos)
+        && this.on == that.on
+        && this.orientation == that.orientation
+        && this.dirtsLeft.equals(that.dirtsLeft)
+        && this.previousMove.equals(that.previousMove)
+        && this.turnAround == that.turnAround){
+            return true;
+        }
+        return false;
     }
     
     public ArrayList<String> availableMoves(SuperAgent sa){
@@ -37,12 +52,12 @@ public class State
             return moves;
         }
         //check if turn off
-        if(dirtsLeft == 0 && pos.equals(sa.startingPosition)){
+        if(dirtsLeft.size() == 0 && pos.equals(sa.startingPosition)){
             moves.add("TURN_OFF");
             return moves;
         }
         //check if dirt
-        for(Coordinates dirt: sa.dirts){
+        for(Coordinates dirt: dirtsLeft){
             if(pos.equals(dirt)){
                 moves.add("SUCK");
                 return moves;
@@ -53,13 +68,12 @@ public class State
             moves.add("TURN_RIGHT");
             return moves;
         }
-        //**check walls**
-        //check front wall
+        //check obstacles
         boolean goObstacle = false; //boolean if obstacle at go
         boolean leftObstacle = false; //boolean if obstacle at left
         boolean rightObstacle = false; //boolean if obstacle at right
         Coordinates goCoor = calculateGo(orientation);
-        Coordinates leftCoor = calculateGo((orientation-1)%4);
+        Coordinates leftCoor = calculateGo((orientation+3)%4);
         Coordinates rightCoor = calculateGo((orientation+1)%4);
         for(Coordinates obs: sa.obstacles){
             if(goCoor.equals(obs)){
@@ -72,6 +86,17 @@ public class State
                 rightObstacle = true;
             }
         }
+        //check borders
+        if(goCoor.x == 0 || goCoor.y == 0 || goCoor.x == sa.roomHeight+1 || goCoor.y == sa.roomHeight+1){
+            goObstacle = true;
+        }
+        if(leftCoor.x == 0 || leftCoor.y == 0 || leftCoor.x == sa.roomHeight+1 || leftCoor.y == sa.roomHeight+1){
+            leftObstacle = true;
+        }
+        if(rightCoor.x == 0 || rightCoor.y == 0 || rightCoor.x == sa.roomHeight+1 || rightCoor.y == sa.roomHeight+1){
+            rightObstacle = true;
+        }
+        //turn around if surrounded
         if(goObstacle && rightObstacle && leftObstacle){
             moves.add("TURN_AROUND");
             return moves;
@@ -83,10 +108,10 @@ public class State
         if(goObstacle){
             moves.remove("GO");
         }
-        if(leftObstacle){
+        if(leftObstacle || (previousMove.compareTo("TURN_RIGHT") == 0)){
             moves.remove("TURN_LEFT");
         }
-        if(rightObstacle){
+        if(rightObstacle || (previousMove.compareTo("TURN_LEFT") == 0)){
             moves.remove("TURN_RIGHT");
         }
         return moves;

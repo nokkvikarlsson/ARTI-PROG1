@@ -126,7 +126,10 @@ public class SuperAgent implements Agent
 		State initialState = new State();
 		initialState.pos = new Coordinates(this.startingPosition.x, this.startingPosition.y);
 		initialState.orientation = this.orientation;
-		initialState.dirtsLeft = this.dirts.size();
+		initialState.dirtsLeft = new ArrayList<Coordinates>();
+		for(Coordinates dirt: this.dirts){
+			initialState.dirtsLeft.add(new Coordinates(dirt.x, dirt.y));
+		}
 		System.out.println("INITIALIZING BFS*****************");
 		BFS bfs = new BFS(initialState, this);
 		boolean foundpath = bfs.findPath();
