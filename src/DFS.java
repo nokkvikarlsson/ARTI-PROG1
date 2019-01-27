@@ -1,16 +1,21 @@
 import java.util.ArrayList;
-import java.util.Queue;
+import java.util.Stack;
+
+import javax.swing.text.html.HTMLDocument.HTMLReader.PreAction;
+
 import java.util.LinkedList;
 
-public class BFS{
-    public Queue<State> frontier;
+public class DFS{
+    public Stack<State> frontier;
     public State initialState;
     public SuperAgent sa;
+    public ArrayList<State> previouslyVisited;
 
-    public BFS(State _initialState, SuperAgent _sa){
-        frontier = new LinkedList<State>();
+    public DFS(State _initialState, SuperAgent _sa){
+        frontier = new Stack<State>();
         initialState = new State(_initialState);
         sa = _sa;
+        previouslyVisited = new ArrayList<State>();
     }
 
     //returns true if path found. false if no answer
@@ -18,9 +23,9 @@ public class BFS{
         if(goalTest(initialState)){ return initialState; }
         frontier.add(initialState);
         while(!frontier.isEmpty()){
-            State currentState = frontier.remove();
+            State currentState = frontier.pop();
+            previouslyVisited.add(currentState);
             //PRINT CURRENT STATE
-            /*
             System.out.print("CURRENT STATE: ");
             System.out.print("pos: (" + currentState.pos.x + "," + currentState.pos.y + "); ");
             System.out.print("on: " + currentState.on + "; ");
@@ -28,16 +33,10 @@ public class BFS{
             System.out.print("dirts left: " + currentState.dirtsLeft.size() + "; ");
             System.out.print("previous move: " + currentState.previousMove + "; ");
             System.out.print("turn around: " + currentState.turnAround + ";\n");
-            */
             //*******************
             ArrayList<String> successors = currentState.availableMoves(sa);
             for(String successor: successors){
                 State successorState = new State(currentState);
-                for(State s: frontier){
-                    if(successorState.equals(s)){
-                        continue;
-                    }
-                }
                 if(successor.equals("TURN_ON")){successorState.on = true; successorState.previousMove = "TURN_ON"; successorState.moveHistory.add("TURN_ON"); }
                 else if(successor.equals("TURN_OFF")){successorState.on = false; successorState.previousMove = "TURN_OFF"; successorState.moveHistory.add("TURN_OFF");}
                 else if(successor.equals("SUCK")){
@@ -69,9 +68,16 @@ public class BFS{
                     successorState.previousMove = "GO";
                     successorState.moveHistory.add("GO");
                 }
-
-                if(goalTest(successorState)){return successorState;}
-                else{frontier.add(successorState);}
+                boolean duplicate = false;
+                for(State s: previouslyVisited){
+                    if(successorState.equals(s)){
+                        duplicate = true;
+                    }
+                }
+                if(!duplicate){
+                    if(goalTest(successorState)){return successorState;}
+                    else{frontier.add(successorState);}
+                }
             }
         }
         return null;

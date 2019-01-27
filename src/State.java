@@ -1,5 +1,7 @@
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.LinkedList;
+import java.util.Queue;
 
 public class State
 {
@@ -9,7 +11,7 @@ public class State
     public ArrayList<Coordinates> dirtsLeft;
     public String previousMove;
     public boolean turnAround;
-    //public Stack<String> moveHistory;
+    public Queue<String> moveHistory;
 
     public State(){
         pos = new Coordinates();
@@ -18,7 +20,7 @@ public class State
         dirtsLeft = new ArrayList<Coordinates>();
         previousMove = null;
         turnAround = false;
-        //moveHistory = new Linke
+        moveHistory = new LinkedList<String>();
     }
 
     public State(State copy){
@@ -32,15 +34,13 @@ public class State
         if(copy.previousMove != null){this.previousMove = new String(copy.previousMove);}
         else{this.previousMove = null;}
         this.turnAround = copy.turnAround;
+        moveHistory = new LinkedList<String>(copy.moveHistory);
     }
 
     public boolean equals(State that){
         if(this.pos.equals(that.pos)
         && this.on == that.on
-        && this.orientation == that.orientation
-        && this.dirtsLeft.equals(that.dirtsLeft)
-        && this.previousMove.equals(that.previousMove)
-        && this.turnAround == that.turnAround){
+        && this.orientation == that.orientation){
             return true;
         }
         return false;

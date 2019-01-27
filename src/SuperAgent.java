@@ -1,8 +1,10 @@
 import java.util.Collection;
+import java.util.Queue;
 import java.util.Random;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.ArrayList;
+import java.util.LinkedList;
 
 public class SuperAgent implements Agent
 {
@@ -13,7 +15,7 @@ public class SuperAgent implements Agent
 	public ArrayList<Coordinates> dirts;
 	public ArrayList<Coordinates> obstacles;
 	public int orientation;
-	//public Stack<String> moves;
+	public Queue<String> moves;
 
 	public SuperAgent() {
 		roomLength = 0;
@@ -25,8 +27,6 @@ public class SuperAgent implements Agent
 		obstacles = new ArrayList<Coordinates>();
 
 		int orientation = 0; //0 = NORTH, 1 = EAST, 2 = SOUTH, 3 = WEST
-
-		//moves = new Stack<String>();
 	}
 
     public void init(Collection<String> percepts) {
@@ -130,24 +130,20 @@ public class SuperAgent implements Agent
 		for(Coordinates dirt: this.dirts){
 			initialState.dirtsLeft.add(new Coordinates(dirt.x, dirt.y));
 		}
-		System.out.println("INITIALIZING BFS*****************");
-		BFS bfs = new BFS(initialState, this);
-		boolean foundpath = bfs.findPath();
-		if(foundpath){
+		System.out.println("INITIALIZING DFS*****************");
+		DFS dfs = new DFS(initialState, this);
+		State finalState = dfs.findPath();
+		if(finalState != null){
 			System.out.println("PATH FOUND******************");
 		}
 		else{
 			System.out.println("PATH NOT FOUND**************");
 		}
+		moves = new LinkedList<>(finalState.moveHistory);
     }
 
     public String nextAction(Collection<String> percepts) {
-		System.out.print("perceiving:");
-		for(String percept:percepts) {
-			System.out.print("'" + percept + "', ");
-		}
-		System.out.println("");
-		String[] actions = { "TURN_ON", "TURN_OFF", "TURN_RIGHT", "TURN_LEFT", "GO", "SUCK" };
-		return actions[random.nextInt(actions.length)];	
+		String move = moves.remove();
+		return move;
 	}
 }
