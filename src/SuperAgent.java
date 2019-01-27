@@ -13,8 +13,7 @@ public class SuperAgent implements Agent
 	public ArrayList<Coordinates> dirts;
 	public ArrayList<Coordinates> obstacles;
 	public int orientation;
-	public Stack<String> moves;
-	public Node root;
+	//public Stack<String> moves;
 
 	public SuperAgent() {
 		roomLength = 0;
@@ -27,22 +26,7 @@ public class SuperAgent implements Agent
 
 		int orientation = 0; //0 = NORTH, 1 = EAST, 2 = SOUTH, 3 = WEST
 
-		root = new Node();
-
-		moves = new Stack<String>();
-	}
-
-	public class Coordinates {
-		int x;
-		int y;
-		Coordinates(){
-			x = 0;
-			y = 0;
-		}
-		Coordinates(int _x, int _y){
-			x = _x;
-			y = _y;
-		}
+		//moves = new Stack<String>();
 	}
 
     public void init(Collection<String> percepts) {
@@ -76,11 +60,11 @@ public class SuperAgent implements Agent
 					if (m.matches()) {
 						System.out.println("Robot faces " + m.group(1));
 						//Set orientation variable
-						if(m.group(1).compareTo("NORTH")){
+						if(m.group(1).compareTo("NORTH") == 0){
 							orientation = 0;
-						} else if(m.group(1).compareTo("EAST")){
+						} else if(m.group(1).compareTo("EAST") == 0){
 							orientation = 1;
-						} else if(m.group(1).compareTo("SOUTH")){
+						} else if(m.group(1).compareTo("SOUTH") == 0){
 							orientation = 2;
 						} else {
 							orientation = 3;
@@ -138,13 +122,31 @@ public class SuperAgent implements Agent
 		}
 		System.out.println("");
 		/**************************************************************END CHECK */
-
 		//CREATE THE MOVES STACK
-		
+		State initialState = new State();
+		initialState.pos = new Coordinates(this.startingPosition.x, this.startingPosition.y);
+		initialState.orientation = this.orientation;
+		initialState.dirtsLeft = this.dirts.size();
+		System.out.println("INITIALIZING BFS*****************");
+		BFS bfs = new BFS(initialState, this);
+		boolean foundpath = bfs.findPath();
+		if(foundpath){
+			System.out.println("PATH FOUND******************");
+		}
+		else{
+			System.out.println("PATH NOT FOUND**************");
+		}
     }
 
     public String nextAction(Collection<String> percepts) {
-		String move = moves.pop();
-		return move;
+		/*String move = moves.pop();
+		return move;*/
+		System.out.print("perceiving:");
+		for(String percept:percepts) {
+			System.out.print("'" + percept + "', ");
+		}
+		System.out.println("");
+		String[] actions = { "TURN_ON", "TURN_OFF", "TURN_RIGHT", "TURN_LEFT", "GO", "SUCK" };
+		return actions[random.nextInt(actions.length)];
 	}
 }
