@@ -13,6 +13,8 @@ public class SuperAgent implements Agent
 	public ArrayList<Coordinates> dirts;
 	public ArrayList<Coordinates> obstacles;
 	public int orientation;
+	public Stack<String> moves;
+	public Node root;
 
 	public SuperAgent() {
 		roomLength = 0;
@@ -24,6 +26,10 @@ public class SuperAgent implements Agent
 		obstacles = new ArrayList<Coordinates>();
 
 		int orientation = 0; //0 = NORTH, 1 = EAST, 2 = SOUTH, 3 = WEST
+
+		root = new Node();
+
+		moves = new Stack<String>();
 	}
 
 	public class Coordinates {
@@ -131,15 +137,14 @@ public class SuperAgent implements Agent
 			System.out.print("(" + obstacle.x + "," + obstacle.y + ") ");
 		}
 		System.out.println("");
+		/**************************************************************END CHECK */
+
+		//CREATE THE MOVES STACK
+		
     }
 
     public String nextAction(Collection<String> percepts) {
-		System.out.print("perceiving:");
-		for(String percept:percepts) {
-			System.out.print("'" + percept + "', ");
-		}
-		System.out.println("");
-		String[] actions = { "TURN_ON", "TURN_OFF", "TURN_RIGHT", "TURN_LEFT", "GO", "SUCK" };
-		return actions[random.nextInt(actions.length)];
+		String move = moves.pop();
+		return move;
 	}
 }

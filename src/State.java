@@ -17,6 +17,28 @@ public class State
     public boolean on;
     public int orientation; //0 = NORTH, 1 = EAST, 2 = SOUTH, 3 = WEST
     public int dirtsLeft;
-    //available moves()
-    //public void execute(MOVE)
+    public String previousMove;
+    public boolean turnAround;
+
+    public State(){
+        posX = 0;
+        posY = 0;
+        on = false;
+        orientation = 0;
+        dirtsLeft = 0;
+        previousMove = null;
+    }
+
+    public State(State copy){
+        this.posX = copy.posX;
+        this.posY = copy.posY;
+        this.on = copy.on;
+        this.orientation = copy.orientation;
+        this.dirtsLeft = copy.dirtsLeft;
+        this.previousMove = copy.previousMove;
+    }
+    
+    public void availableMoves(){
+
+    }
 }
