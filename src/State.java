@@ -197,7 +197,16 @@ public class State implements Comparable<State>
         System.out.print("on: " + on + "; ");
         System.out.print("orientation: " + orientation + "; ");
         System.out.print("dirts left: " + dirtsLeft.size() + "; ");
-        System.out.print("previous move: " + previousMove + ";\n");
+        System.out.print("cost: " + cost + "\n");
+    }
+
+    public void printState(int heur){
+        System.out.print("CURRENT STATE: ");
+        System.out.print("pos: (" + pos.x + "," + pos.y + "); ");
+        System.out.print("on: " + on + "; ");
+        System.out.print("orientation: " + orientation + "; ");
+        System.out.print("dirts left: " + dirtsLeft.size() + "; ");
+        System.out.print("cost: " + cost + "," + heur + "\n");
     }
 
     public String getString(){

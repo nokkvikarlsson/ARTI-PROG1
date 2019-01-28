@@ -130,10 +130,10 @@ public class SuperAgent implements Agent
 		for(Coordinates dirt: this.dirts){
 			initialState.dirtsLeft.add(new Coordinates(dirt.x, dirt.y));
 		}
-		//Runs search algorithm (bfs, dfs, or ucs)
-		System.out.println("INITIALIZING UCS*****************");
-		UCS ucs = new UCS(initialState, this);
-		State finalState = ucs.findPath();
+		//Runs search algorithm (bfs, dfs, ucs, or astar)
+		System.out.println("INITIALIZING ASTAR*****************");
+		Astar a = new Astar(initialState, this);
+		State finalState = a.findPath();
 		if(finalState != null){
 			System.out.println("PATH FOUND******************");
 		}

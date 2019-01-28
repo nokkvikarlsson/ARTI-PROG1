@@ -1,3 +1,5 @@
+import java.lang.Math;
+
 public class Coordinates {
     public int x;
     public int y;
@@ -16,4 +18,11 @@ public class Coordinates {
         }
         return false;
     }
+    public int manhattan(Coordinates that){
+        return Math.abs(this.x - that.x) + Math.abs(this.y - that.y);
+    }
+    public double euclidian(Coordinates that){
+        return Math.sqrt(Math.pow(((double)(this.x - that.x)), 2) + Math.pow(((double)(this.y - that.y)), 2));
+    }
+
 }
