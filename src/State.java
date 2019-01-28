@@ -10,8 +10,8 @@ public class State
     public int orientation; //0 = NORTH, 1 = EAST, 2 = SOUTH, 3 = WEST
     public ArrayList<Coordinates> dirtsLeft;
     public String previousMove;
-    public boolean turnAround;
     public Queue<String> moveHistory;
+    public State parent;
 
     public State(){
         pos = new Coordinates();
@@ -19,8 +19,8 @@ public class State
         orientation = 0;
         dirtsLeft = new ArrayList<Coordinates>();
         previousMove = null;
-        turnAround = false;
         moveHistory = new LinkedList<String>();
+        parent = null;
     }
 
     public State(State copy){
@@ -33,19 +33,20 @@ public class State
         }
         if(copy.previousMove != null){this.previousMove = new String(copy.previousMove);}
         else{this.previousMove = null;}
-        this.turnAround = copy.turnAround;
         moveHistory = new LinkedList<String>(copy.moveHistory);
+        this.parent = copy.parent;
     }
 
     public boolean equals(State that){
         if(this.pos.equals(that.pos)
         && this.on == that.on
-        && this.orientation == that.orientation){
+        && this.orientation == that.orientation
+        && this.dirtsLeft.size() == (that.dirtsLeft.size())){
             return true;
         }
         return false;
     }
-    
+
     public ArrayList<String> availableMoves(SuperAgent sa){
         ArrayList<String> moves = new ArrayList<String>();
         //check if turn on
@@ -65,43 +66,17 @@ public class State
                 return moves;
             }
         }
-        //check if turning around
-        if(turnAround){
-            moves.add("TURN_RIGHT");
-            return moves;
-        }
         //check obstacles
         boolean goObstacle = false; //boolean if obstacle at go
-        boolean leftObstacle = false; //boolean if obstacle at left
-        boolean rightObstacle = false; //boolean if obstacle at right
         Coordinates goCoor = calculateGo(orientation);
-        Coordinates leftCoor = calculateGo((orientation+3)%4);
-        Coordinates rightCoor = calculateGo((orientation+1)%4);
         for(Coordinates obs: sa.obstacles){
             if(goCoor.equals(obs)){
                 goObstacle = true;
-            }
-            if(leftCoor.equals(obs)){
-                leftObstacle = true;
-            }
-            if(rightCoor.equals(obs)){
-                rightObstacle = true;
             }
         }
         //check borders
         if(goCoor.x == 0 || goCoor.y == 0 || goCoor.x == sa.roomHeight+1 || goCoor.y == sa.roomHeight+1){
             goObstacle = true;
-        }
-        if(leftCoor.x == 0 || leftCoor.y == 0 || leftCoor.x == sa.roomHeight+1 || leftCoor.y == sa.roomHeight+1){
-            leftObstacle = true;
-        }
-        if(rightCoor.x == 0 || rightCoor.y == 0 || rightCoor.x == sa.roomHeight+1 || rightCoor.y == sa.roomHeight+1){
-            rightObstacle = true;
-        }
-        //turn around if surrounded
-        if(goObstacle && rightObstacle && leftObstacle){
-            moves.add("TURN_AROUND");
-            return moves;
         }
         //remove moves that would bump to wall
         moves.add("GO");
@@ -110,10 +85,10 @@ public class State
         if(goObstacle){
             moves.remove("GO");
         }
-        if(leftObstacle || (previousMove.compareTo("TURN_RIGHT") == 0) || (previousMove.compareTo("TURN_LEFT") == 0)){
+        if(previousMove.compareTo("TURN_RIGHT") == 0){
             moves.remove("TURN_LEFT");
         }
-        if(rightObstacle || (previousMove.compareTo("TURN_LEFT") == 0) || (previousMove.compareTo("TURN_RIGHT") == 0)){
+        if(previousMove.compareTo("TURN_LEFT") == 0){
             moves.remove("TURN_RIGHT");
         }
         return moves;
@@ -140,7 +115,6 @@ public class State
         System.out.print("on: " + on + "; ");
         System.out.print("orientation: " + orientation + "; ");
         System.out.print("dirts left: " + dirtsLeft.size() + "; ");
-        System.out.print("previous move: " + previousMove + "; ");
-        System.out.print("turn around: " + turnAround + ";\n");
+        System.out.print("previous move: " + previousMove + ";\n");
     }
 }
