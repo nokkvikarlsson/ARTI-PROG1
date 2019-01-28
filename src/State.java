@@ -140,4 +140,8 @@ public class State
         System.out.print("dirts left: " + dirtsLeft.size() + "; ");
         System.out.print("previous move: " + previousMove + ";\n");
     }
+
+    public String getString(){
+        return Integer.toString(pos.x) + Integer.toString(pos.y) + Integer.toString(orientation) + Integer.toString(dirtsLeft.size()) + Boolean.toString(on);
+    }
 }

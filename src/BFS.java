@@ -1,20 +1,20 @@
 import java.util.ArrayList;
 import java.util.Queue;
 import java.util.LinkedList;
-import java.util.Set;
-import java.util.HashSet;
+import java.util.Map;
+import java.util.HashMap;
 
 public class BFS{
     public Queue<State> frontier;
     public State initialState;
     public SuperAgent sa;
-    public Set<State> visited;
+    public Map<String,Boolean> visited;
 
     public BFS(State _initialState, SuperAgent _sa){
         frontier = new LinkedList<State>();
         initialState = new State(_initialState);
         sa = _sa;
-        visited = new HashSet<State>();
+        visited = new HashMap<String, Boolean>();
     }
 
     //returns true if path found. false if no answer
@@ -23,7 +23,7 @@ public class BFS{
         frontier.add(initialState);
         while(!frontier.isEmpty()){
             State currentState = frontier.remove();
-            visited.add(currentState);
+            visited.put(currentState.getString(), true);
             //PRINT CURRENT STATE
             currentState.printState();
             ArrayList<String> successors = currentState.availableMoves(sa);
@@ -32,7 +32,7 @@ public class BFS{
                 successorState.parent = currentState;
                 successorState = fillSuccessor(successor, successorState, currentState);
                 //if successor exists in history, dont add to frontier
-                if(!visited.contains(successorState)){
+                if(!visited.containsKey(successorState.getString())){
                     if(goalTest(successorState)){return successorState;}
                     else{frontier.add(successorState);}
                 }
