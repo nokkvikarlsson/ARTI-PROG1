@@ -35,6 +35,11 @@ public class UCS{
                 //if successor exists in history, dont add to frontier
                 if(!visited.contains(successorState.getString())){
                     frontier.add(frontier.size(),successorState);
+/*print frontier
+for(State s: frontier){
+    System.out.print(s.cost + ",");
+}
+System.out.println();*/
                     Collections.sort(frontier);
                 }
             }
@@ -44,9 +49,7 @@ public class UCS{
 
     //returns true if at starting position, no dirt left and is OFF
     public boolean goalTest(State state){
-        if(state.pos.equals(initialState.pos)
-        && state.dirtsLeft.size() == 0
-        && state.on == false){
+        if(state.on == false && state.previousMove != null){
             return true;
         }
         else{
@@ -78,7 +81,9 @@ public class UCS{
                     dirtIndex = i;
                 }
             }
-            successorState.dirtsLeft.remove(dirtIndex);
+            if(dirtIndex != -1){
+                successorState.dirtsLeft.remove(dirtIndex);
+            }
             successorState.previousMove = "SUCK";
             successorState.moveHistory.add("SUCK");
             if(dirtIndex == -1){
