@@ -133,4 +133,14 @@ public class State
         }
         return newCoor;
     }
+
+    public void printState(){
+        System.out.print("CURRENT STATE: ");
+        System.out.print("pos: (" + pos.x + "," + pos.y + "); ");
+        System.out.print("on: " + on + "; ");
+        System.out.print("orientation: " + orientation + "; ");
+        System.out.print("dirts left: " + dirtsLeft.size() + "; ");
+        System.out.print("previous move: " + previousMove + "; ");
+        System.out.print("turn around: " + turnAround + ";\n");
+    }
 }

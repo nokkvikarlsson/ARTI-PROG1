@@ -122,7 +122,7 @@ public class SuperAgent implements Agent
 		}
 		System.out.println("");
 		/**************************************************************END CHECK */
-		//CREATE THE MOVES STACK
+		//Creates the initial state
 		State initialState = new State();
 		initialState.pos = new Coordinates(this.startingPosition.x, this.startingPosition.y);
 		initialState.orientation = this.orientation;
@@ -130,15 +130,17 @@ public class SuperAgent implements Agent
 		for(Coordinates dirt: this.dirts){
 			initialState.dirtsLeft.add(new Coordinates(dirt.x, dirt.y));
 		}
-		System.out.println("INITIALIZING DFS*****************");
-		DFS dfs = new DFS(initialState, this);
-		State finalState = dfs.findPath();
+		//Runs search algorithm (bfs, dfs, or ucs)
+		System.out.println("INITIALIZING UCS*****************");
+		UCS ucs = new UCS(initialState, this);
+		State finalState = ucs.findPath();
 		if(finalState != null){
 			System.out.println("PATH FOUND******************");
 		}
 		else{
 			System.out.println("PATH NOT FOUND**************");
 		}
+		//Gets moves from the final state and stores them
 		moves = new LinkedList<>(finalState.moveHistory);
     }
 

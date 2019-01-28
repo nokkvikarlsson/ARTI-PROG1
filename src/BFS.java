@@ -20,16 +20,7 @@ public class BFS{
         while(!frontier.isEmpty()){
             State currentState = frontier.remove();
             //PRINT CURRENT STATE
-            /*
-            System.out.print("CURRENT STATE: ");
-            System.out.print("pos: (" + currentState.pos.x + "," + currentState.pos.y + "); ");
-            System.out.print("on: " + currentState.on + "; ");
-            System.out.print("orientation: " + currentState.orientation + "; ");
-            System.out.print("dirts left: " + currentState.dirtsLeft.size() + "; ");
-            System.out.print("previous move: " + currentState.previousMove + "; ");
-            System.out.print("turn around: " + currentState.turnAround + ";\n");
-            */
-            //*******************
+            currentState.printState();
             ArrayList<String> successors = currentState.availableMoves(sa);
             for(String successor: successors){
                 State successorState = new State(currentState);

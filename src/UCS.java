@@ -1,23 +1,16 @@
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Hashtable;
-import java.util.Stack;
+import java.util.Queue;
 import java.util.LinkedList;
-import java.util.Map;
 
-public class DFS{
-    public Stack<State> frontier;
+public class UCS{
+    public Queue<State> frontier;
     public State initialState;
     public SuperAgent sa;
-    public Stack<State> previouslyVisited;
-    public Map<State, State> parent;
 
-    public DFS(State _initialState, SuperAgent _sa){
-        frontier = new Stack<State>();
+    public UCS(State _initialState, SuperAgent _sa){
+        frontier = new LinkedList<State>();
         initialState = new State(_initialState);
         sa = _sa;
-        previouslyVisited = new Stack<State>();
-        parent = new HashMap<State, State>();
     }
 
     //returns true if path found. false if no answer
@@ -25,13 +18,18 @@ public class DFS{
         if(goalTest(initialState)){ return initialState; }
         frontier.add(initialState);
         while(!frontier.isEmpty()){
-            State currentState = frontier.pop();
-            previouslyVisited.add(currentState);
+            State currentState = frontier.remove();
             //PRINT CURRENT STATE
             currentState.printState();
+            if(goalTest(currentState)){return currentState;}
             ArrayList<String> successors = currentState.availableMoves(sa);
             for(String successor: successors){
                 State successorState = new State(currentState);
+                for(State s: frontier){
+                    if(successorState.equals(s)){
+                        continue;
+                    }
+                }
                 if(successor.equals("TURN_ON")){successorState.on = true; successorState.previousMove = "TURN_ON"; successorState.moveHistory.add("TURN_ON"); }
                 else if(successor.equals("TURN_OFF")){successorState.on = false; successorState.previousMove = "TURN_OFF"; successorState.moveHistory.add("TURN_OFF");}
                 else if(successor.equals("SUCK")){
@@ -63,23 +61,8 @@ public class DFS{
                     successorState.previousMove = "GO";
                     successorState.moveHistory.add("GO");
                 }
-                boolean duplicate = false;
-                if(!successor.equals("SUCK") || !successorState.previousMove.equals("SUCK")){
-                    for(State s: previouslyVisited){
-                        if(successorState.equals(s)){
-                            duplicate = true;
-                        }
-                    }
-                }
-                if(!duplicate){
-                    if(goalTest(successorState)){return successorState;}
-                    else{frontier.add(successorState); parent.put(successorState, previouslyVisited.peek());}
-                }
-                else{
-                    while(parent.get(frontier.peek()) != previouslyVisited.peek()){
-                        previouslyVisited.pop();
-                    }
-                }
+
+                frontier.add(successorState);
             }
         }
         return null;
