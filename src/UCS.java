@@ -35,14 +35,9 @@ public class UCS{
                 //if successor exists in history, dont add to frontier
                 if(!visited.contains(successorState.getString())){
                     frontier.add(frontier.size(),successorState);
-/*print frontier
-for(State s: frontier){
-    System.out.print(s.cost + ",");
-}
-System.out.println();*/
-                    Collections.sort(frontier);
                 }
             }
+            Collections.sort(frontier);
         }
         return null;
     }
