@@ -121,6 +121,61 @@ public class State implements Comparable<State>
         return moves;
     }
 
+    public ArrayList<String> availableMovesNotStrict(SuperAgent sa){
+        ArrayList<String> moves = new ArrayList<String>();
+        //check if turn on
+        if(previousMove == null){
+            moves.add("TURN_ON");
+            return moves;
+        }
+        //check obstacles
+        boolean goObstacle = false; //boolean if obstacle at go
+        boolean leftObstacle = false; //boolean if obstacle on left
+        boolean rightObstacle = false; //boolean if obstacle on right
+        Coordinates goCoor = calculateGo(orientation);
+        Coordinates leftCoor = calculateGo((orientation+3)%4);
+        Coordinates rightCoor = calculateGo((orientation+1)%4);
+        for(Coordinates obs: sa.obstacles){
+            if(goCoor.equals(obs)){
+                goObstacle = true;
+            }
+            if(leftCoor.equals(obs)){
+                leftObstacle = true;
+            }
+            if(rightCoor.equals(obs)){
+                rightObstacle = true;
+            }
+        }
+        //check borders
+        if(goCoor.x == 0 || goCoor.y == 0 || goCoor.x == sa.roomHeight+1 || goCoor.y == sa.roomHeight+1){
+            goObstacle = true;
+        }
+        if(leftCoor.x == 0 || leftCoor.y == 0 || leftCoor.x == sa.roomHeight+1 || leftCoor.y == sa.roomHeight+1){
+            leftObstacle = true;
+        }
+        if(rightCoor.x == 0 || rightCoor.y == 0 || rightCoor.x == sa.roomHeight+1 || rightCoor.y == sa.roomHeight+1){
+            rightObstacle = true;
+        }
+//PRINT VARIABLES
+//System.out.println("GO: " + goObstacle + " LEFT: " + leftObstacle + " RIGHT: " + rightObstacle);
+        //remove moves that would bump to wall
+        moves.add("GO");
+        moves.add("TURN_RIGHT");
+        moves.add("TURN_LEFT");
+        moves.add("SUCK");
+        moves.add("TURN_OFF");
+        if(goObstacle){
+            moves.remove("GO");
+        }
+        if(leftObstacle || (previousMove.compareTo("TURN_RIGHT") == 0)){
+            moves.remove("TURN_LEFT");
+        }
+        if(rightObstacle || (previousMove.compareTo("TURN_LEFT") == 0)){
+            moves.remove("TURN_RIGHT");
+        }
+        return moves;
+    }
+
     //calculates where the robot would be if it had the new oritentation
     private Coordinates calculateGo(int newOrientation){
         Coordinates newCoor;
