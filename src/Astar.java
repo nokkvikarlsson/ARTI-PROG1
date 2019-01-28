@@ -135,7 +135,7 @@ public class Astar
         }
         order.add(sa.startingPosition);
         for(int i = 1; i < order.size(); i++){
-            total += order.get(i-1).manhattan(order.get(i));
+            total += order.get(i-1).euclidian(order.get(i));
         }
         return total;
     }
