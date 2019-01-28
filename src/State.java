@@ -108,10 +108,10 @@ public class State
         if(goObstacle){
             moves.remove("GO");
         }
-        if(leftObstacle || (previousMove.compareTo("TURN_RIGHT") == 0) || (previousMove.compareTo("TURN_LEFT") == 0)){
+        if(leftObstacle || (previousMove.compareTo("TURN_RIGHT") == 0)){
             moves.remove("TURN_LEFT");
         }
-        if(rightObstacle || (previousMove.compareTo("TURN_LEFT") == 0) || (previousMove.compareTo("TURN_RIGHT") == 0)){
+        if(rightObstacle || (previousMove.compareTo("TURN_LEFT") == 0)){
             moves.remove("TURN_RIGHT");
         }
         return moves;
@@ -142,6 +142,22 @@ public class State
     }
 
     public String getString(){
-        return Integer.toString(pos.x) + Integer.toString(pos.y) + Integer.toString(orientation) + Integer.toString(dirtsLeft.size()) + Boolean.toString(on);
+        String output = "";
+        output += Integer.toString(pos.x);
+        output += ",";
+        output += Integer.toString(pos.y);
+        output += ",";
+        output += Integer.toString(orientation);
+        output += ",";
+        output += Boolean.toString(on);
+        output += ",";
+        for(Coordinates dirt: dirtsLeft){
+            output += Integer.toString(dirt.x);
+            output += ",";
+            output += Integer.toString(dirt.y);
+            output += ",";
+        }
+
+        return output;
     }
 }
