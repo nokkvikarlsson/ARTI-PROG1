@@ -2,24 +2,28 @@ import java.util.ArrayList;
 import java.util.Queue;
 import java.util.LinkedList;
 import java.util.Stack;
+import java.util.Collections;
 
 public class UCS{
-    public Queue<State> frontier;
+    public ArrayList<State> frontier;
     public State initialState;
     public SuperAgent sa;
+    public ArrayList<String> visited;
 
     public UCS(State _initialState, SuperAgent _sa){
-        frontier = new LinkedList<State>();
+        frontier = new ArrayList<State>();
         initialState = new State(_initialState);
         sa = _sa;
+        visited = new ArrayList<String>();
     }
 
     //returns true if path found. false if no answer
     public State findPath(){
         if(goalTest(initialState)){ return initialState; }
-        frontier.add(initialState);
+        frontier.add(frontier.size(),initialState);
         while(!frontier.isEmpty()){
-            State currentState = frontier.remove();
+            State currentState = frontier.remove(0);
+            visited.add(currentState.getString());
             //PRINT CURRENT STATE
             currentState.printState();
             if(goalTest(currentState)){return currentState;}
@@ -27,16 +31,12 @@ public class UCS{
             for(String successor: successors){
                 State successorState = new State(currentState);
                 successorState.parent = currentState;
+                successorState.cost = currentState.cost + 1;
                 successorState = fillSuccessor(successor, successorState, currentState);
                 //if successor exists in history, dont add to frontier
-                boolean duplicate = false;
-                for(State s = successorState.parent; s.parent != null; s = s.parent){
-                    if(successorState.equals(s)){
-                        duplicate = true;
-                    }
-                }
-                if(!duplicate){
-                    frontier.add(successorState);
+                if(!visited.contains(successorState.getString())){
+                    frontier.add(frontier.size(),successorState);
+                    Collections.sort(frontier);
                 }
             }
         }

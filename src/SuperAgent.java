@@ -131,9 +131,9 @@ public class SuperAgent implements Agent
 			initialState.dirtsLeft.add(new Coordinates(dirt.x, dirt.y));
 		}
 		//Runs search algorithm (bfs, dfs, or ucs)
-		System.out.println("INITIALIZING BFS*****************");
-		BFS bfs = new BFS(initialState, this);
-		State finalState = bfs.findPath();
+		System.out.println("INITIALIZING UCS*****************");
+		UCS ucs = new UCS(initialState, this);
+		State finalState = ucs.findPath();
 		if(finalState != null){
 			System.out.println("PATH FOUND******************");
 		}

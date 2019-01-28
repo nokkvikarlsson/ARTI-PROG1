@@ -3,7 +3,7 @@ import java.util.Collection;
 import java.util.LinkedList;
 import java.util.Queue;
 
-public class State
+public class State implements Comparable<State>
 {
     public Coordinates pos;
     public boolean on;
@@ -12,6 +12,8 @@ public class State
     public String previousMove;
     public Queue<String> moveHistory;
     public State parent;
+    //for UCS
+    public int cost;
 
     public State(){
         pos = new Coordinates();
@@ -21,6 +23,7 @@ public class State
         previousMove = null;
         moveHistory = new LinkedList<String>();
         parent = null;
+        cost = 1;
     }
 
     public State(State copy){
@@ -35,6 +38,7 @@ public class State
         else{this.previousMove = null;}
         moveHistory = new LinkedList<String>(copy.moveHistory);
         this.parent = copy.parent;
+        this.cost = copy.cost;
     }
 
     public boolean equals(State that){
@@ -159,5 +163,11 @@ public class State
         }
 
         return output;
+    }
+
+    @Override
+    public int compareTo(State comp){
+        int compcost = comp.cost;
+        return this.cost - compcost;
     }
 }
